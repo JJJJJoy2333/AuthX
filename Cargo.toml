@@ -1,0 +1,12 @@
+[package]
+name = "authx"
+version = "0.1.0"
+authors = ["Rust AuthX"]
+edition = "2021"
+
+[lib]
+crate_type = ["cdylib"]
+path = "src/authx.rs"
+
+[dependencies]
+libc = "0.2.181"

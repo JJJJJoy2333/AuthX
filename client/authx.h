@@ -9,10 +9,10 @@
 #endif
 
 #ifdef _WIN32
-#define AUTHX_API EXTERN_C __declspec(dllexport)
+#define AUTHX_API AUTHX_EXTERN_C __declspec(dllexport)
 #define AUTHX_DEPRECATED __declspec(deprecated)
 #else
-#define AUTHX_API EXTERN_C __attribute__((visibility("default")))
+#define AUTHX_API AUTHX_EXTERN_C __attribute__((visibility("default")))
 #define AUTHX_DEPRECATED __attribute__((deprecated))
 #endif
 
