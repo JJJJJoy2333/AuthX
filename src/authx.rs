@@ -20,6 +20,7 @@ use libc::{c_char};
 // use AUTHX_TRACE_ID::AuthxTraceId;
 
 use std::ffi::CString;
+use std::sync::OnceLock;
 // use std::ptr;
 
 #[repr(C)]
@@ -94,13 +95,26 @@ pub extern "C" fn authx_init(data: *mut AUTHX_DATA) -> AUTHX_RET {
     AUTHX_RET::AuthxOk
 }
 
+static VERSION_STR: OnceLock<CString> = OnceLock::new();
+
 // Implement authx_get_version
 #[no_mangle]
 pub extern "C" fn authx_get_version(version: *mut *const c_char) -> AUTHX_RET {
-    let version_str = CString::new("1.0.0").unwrap();
-    unsafe { *version = version_str.as_ptr() as *const c_char; }
+    let version_str = VERSION_STR.get_or_init(|| {
+        let v = format!(
+            "{} ({} - {})",
+            env!("VERGEN_GIT_DESCRIBE"),
+            env!("VERGEN_BUILD_TIMESTAMP"),
+            env!("VERGEN_RUSTC_SEMVER")
+        );
+        CString::new(v).expect("Failed to create version CString")
+    });
+    unsafe {
+        if !version.is_null() {
+            *version = version_str.as_ptr();
+        }
+    }
     AUTHX_RET::AuthxOk
-
 }
 
 // Implement authx_shutdown
