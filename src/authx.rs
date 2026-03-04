@@ -21,7 +21,19 @@ use libc::{c_char};
 
 use std::ffi::CString;
 use std::sync::OnceLock;
-// use std::ptr;
+use ctor::{ctor, dtor};
+
+#[ctor]
+fn authx_library_init() {
+    // Initialization code here
+    // This will run when the library is loaded (e.g. by dlopen)
+}
+
+#[dtor]
+fn authx_library_fini() {
+    // Teardown code here
+    // This will run when the library is unloaded (e.g. by dlclose)
+}
 
 #[repr(C)]
 pub enum AUTHX_RET {
